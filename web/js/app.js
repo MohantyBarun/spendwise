@@ -5,8 +5,8 @@ import {
 
 // Fill these in once the repository and a release exist; empty links are hidden.
 const LINKS = {
-  github: '',
-  apk: '',
+  github: 'https://github.com/MohantyBarun/spendwise',
+  apk: 'https://github.com/MohantyBarun/spendwise/releases/latest/download/SpendWise-demo.apk',
 };
 
 const EXAMPLES = [
