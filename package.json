@@ -1,0 +1,11 @@
+{
+  "name": "spendwise",
+  "private": true,
+  "type": "module",
+  "description": "Web demo and tests for SpendWise. The Android app builds with Gradle.",
+  "scripts": {
+    "test": "node --test \"web/test/*.test.mjs\"",
+    "serve": "npx --yes http-server@14.1.1 web -p 5173 -c-1",
+    "deploy": "npx --yes firebase-tools@14 deploy --only hosting"
+  }
+}

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SpendWise</title>
+  <meta name="description" content="An Android expense tracker that logs UPI payments from bank SMS, reminds you to describe them, and sends a weekly report on how to save. Try the parser and report here.">
+  <meta name="theme-color" content="#1b5e20">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="#top" aria-label="SpendWise home">
+        <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="6"/><path d="M6 13h3v6H6zM10.5 9h3v10h-3zM15 5h3v14h-3z"/></svg>
+        SpendWise
+      </a>
+      <nav class="nav">
+        <a href="#try">Try it</a>
+        <a href="#report">Report</a>
+        <a href="#how">How it works</a>
+        <a class="needs-link" data-link="github" href="#">Source</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero wrap">
+      <p class="eyebrow">Android · Java · Firebase free tier</p>
+      <h1>Every UPI payment logged, labelled and reviewed weekly.</h1>
+      <p class="lede">SpendWise reads your bank's payment SMS on the phone, reminds you each evening to note what a payment was for, and sends a weekly report on where you can save. This page runs the app's own parser and report engine on sample data, entirely in your browser.</p>
+      <div class="actions">
+        <a class="btn primary" href="#try">Try the SMS parser</a>
+        <a class="btn needs-link" data-link="apk" href="#">Download the Android demo</a>
+        <a class="btn ghost needs-link" data-link="github" href="#">View the source</a>
+      </div>
+    </section>
+
+    <section id="try" class="wrap section">
+      <div class="section-head">
+        <h2>Paste a bank SMS</h2>
+        <p>Pick an example or paste your own. Nothing leaves this page.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <label class="label" for="sms">Message text</label>
+          <textarea id="sms" rows="7" spellcheck="false" placeholder="e.g. Sent Rs.250.00 From HDFC Bank A/C *1234 To SWIGGY On 17/11/26 Ref 431234567890"></textarea>
+          <p class="label small-gap">Examples</p>
+          <div class="chips" id="examples"></div>
+        </div>
+        <div class="card result" id="result" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section id="report" class="wrap section">
+      <div class="section-head row-between">
+        <div>
+          <h2>Weekly report</h2>
+          <p>Five weeks of made-up spending. Edit descriptions and categories below and the report updates.</p>
+        </div>
+        <div class="controls">
+          <label class="budget">Monthly budget
+            <span class="input-prefix">₹<input id="budget" type="number" min="0" step="500" inputmode="numeric"></span>
+          </label>
+          <button class="btn ghost" id="reset" type="button">Reset demo</button>
+        </div>
+      </div>
+
+      <div class="weekbar card">
+        <button class="btn ghost icon" id="prev" type="button" aria-label="Previous week">‹ Earlier</button>
+        <div class="week-title" id="weekTitle"></div>
+        <button class="btn ghost icon" id="next" type="button" aria-label="Next week">Later ›</button>
+      </div>
+
+      <div class="grid-report">
+        <div class="card">
+          <p class="label">Spent this week</p>
+          <p class="hero-number" id="total"></p>
+          <p class="muted" id="compare"></p>
+          <h3>How to save better</h3>
+          <ul class="tips" id="tips"></ul>
+        </div>
+        <div class="card">
+          <h3>By category</h3>
+          <div class="hbars" id="categories"></div>
+        </div>
+        <div class="card">
+          <h3>By day</h3>
+          <div class="cols" id="days"></div>
+        </div>
+        <div class="card">
+          <h3>Where it went</h3>
+          <ol class="merchants" id="merchants"></ol>
+        </div>
+      </div>
+
+      <div class="card list-card">
+        <div class="reminder" id="reminder" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0-6 6v4l-2 3h16l-2-3V9a6 6 0 0 0-6-6zm0 18a2.5 2.5 0 0 0 2.4-2h-4.8A2.5 2.5 0 0 0 12 21z"/></svg>
+          <div><strong>9:00 PM reminder</strong><span id="reminderText"></span></div>
+          <label class="switch"><input type="checkbox" id="pendingOnly"> Show only these</label>
+        </div>
+        <div class="txns" id="txns"></div>
+      </div>
+    </section>
+
+    <section id="how" class="wrap section">
+      <div class="section-head">
+        <h2>How it works</h2>
+        <p>No servers to pay for. Everything heavy happens on the phone.</p>
+      </div>
+      <ol class="steps">
+        <li class="card"><span class="step-n">1</span><h3>Capture</h3><p>A broadcast receiver sees each incoming SMS. Only bank debit alerts get past the parser; OTPs, credits, reminders and messages from personal numbers are dropped on the device.</p></li>
+        <li class="card"><span class="step-n">2</span><h3>Store</h3><p>Amount, merchant, last four digits and reference number go to Cloud Firestore under the user's own ID. The SMS text itself is never uploaded. Offline writes sync later.</p></li>
+        <li class="card"><span class="step-n">3</span><h3>Remind</h3><p>WorkManager runs a 9 PM job: if any recent payment has no description, a notification opens the list filtered to just those. Categories you pick are remembered per merchant.</p></li>
+        <li class="card"><span class="step-n">4</span><h3>Report</h3><p>Every Sunday a rules engine compares the week with the previous four and writes concrete tips: categories above their usual level, frequent food orders, small payments adding up, budget pace.</p></li>
+      </ol>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Security</h3>
+          <ul class="checks">
+            <li>Firestore rules let a signed-in user read and write only their own records, with type and size checks on every field.</li>
+            <li>The SMS receiver accepts broadcasts from the system only.</li>
+            <li>Optional fingerprint or PIN lock, Android backups off, amounts hidden on the lock screen.</li>
+            <li>The demo edition asks for no SMS permission at all: payments come from sharing a single message into the app.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Built with</h3>
+          <ul class="stack">
+            <li>Java 17, Android SDK, Material 3</li>
+            <li>Firebase Authentication and Cloud Firestore (Spark plan)</li>
+            <li>WorkManager, BiometricPrompt</li>
+            <li>JUnit tests for the parser and report engine, mirrored here in JavaScript</li>
+            <li>This page: plain HTML, CSS and JS, an installable PWA on Firebase Hosting</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap footer">
+    <p>SpendWise is a personal project. Sample data on this page is generated; no real accounts are involved.</p>
+  </footer>
+
+  <div class="tooltip" id="tooltip" role="tooltip" hidden></div>
+</body>
+</html>

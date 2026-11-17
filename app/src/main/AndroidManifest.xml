@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Shared by both editions. SMS permissions and the SMS receiver live in src/full/AndroidManifest.xml. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+
+    <application
+        android:name=".App"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.SpendWise">
+
+        <activity
+            android:name=".ui.MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.LoginActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.EditTransactionActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.MainActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.ReportActivity"
+            android:exported="false"
+            android:label="Weekly report"
+            android:parentActivityName=".ui.MainActivity" />
+
+        <!-- Long-press a bank SMS > Share > SpendWise. Needs no SMS permission. -->
+        <activity
+            android:name=".ui.ShareActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:label="Add to SpendWise"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

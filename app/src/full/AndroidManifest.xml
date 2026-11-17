@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Full edition only: automatic capture of bank SMS. Merged into src/main/AndroidManifest.xml. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
+    <application>
+        <!-- Only the system (holder of BROADCAST_SMS) can deliver to this receiver. -->
+        <receiver
+            android:name=".sms.SmsReceiver"
+            android:exported="true"
+            android:permission="android.permission.BROADCAST_SMS">
+            <intent-filter android:priority="999">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+    </application>
+</manifest>

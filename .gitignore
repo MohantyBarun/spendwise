@@ -1,0 +1,16 @@
+.gradle/
+build/
+local.properties
+.idea/
+*.iml
+captures/
+.cxx/
+*.apk
+*.aab
+*.jks
+*.keystore
+node_modules/
+.firebase/
+firebase-debug.log
+# Firebase project config: download your own from the Firebase console
+app/google-services.json

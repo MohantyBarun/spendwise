@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_report"
+        android:title="Weekly report"
+        app:showAsAction="always|withText" />
+    <item
+        android:id="@+id/action_scan"
+        android:title="Scan SMS inbox (last 30 days)"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_sample"
+        android:title="Load sample data"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_clear_sample"
+        android:title="Remove sample data"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_budget"
+        android:title="Monthly budget"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_lock"
+        android:checkable="true"
+        android:title="Lock app with fingerprint / PIN"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_signout"
+        android:title="Sign out"
+        app:showAsAction="never" />
+</menu>

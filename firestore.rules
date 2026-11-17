@@ -1,0 +1,32 @@
+rules_version = '2';
+
+// Each signed-in user can touch only their own subtree. Everything else is denied by default.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    match /users/{uid}/transactions/{id} {
+      allow read, delete: if isOwner(uid);
+      allow create, update: if isOwner(uid)
+        && request.resource.data.amount is number
+        && request.resource.data.amount > 0
+        && request.resource.data.timestamp is int
+        && request.resource.data.merchant is string
+        && request.resource.data.merchant.size() <= 200
+        && request.resource.data.note is string
+        && request.resource.data.note.size() <= 500
+        && request.resource.data.category is string
+        && request.resource.data.category.size() <= 50;
+    }
+
+    match /users/{uid}/merchantRules/{key} {
+      allow read, delete: if isOwner(uid);
+      allow create, update: if isOwner(uid)
+        && request.resource.data.category is string
+        && request.resource.data.category.size() <= 50;
+    }
+  }
+}
